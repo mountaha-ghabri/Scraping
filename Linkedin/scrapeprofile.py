@@ -24,17 +24,17 @@ print("\nIMPORTANT: First steps:")
 print("1. Close ALL Chrome windows")
 print("2. Open a new Command Prompt (cmd.exe, not PowerShell)")
 print("3. Run this command:")
-print('"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" --remote-debugging-port=9222 --user-data-dir="C:\\selenium\\ChromeProfile"')
+print('"chrome path in your machine" --remote-debugging-port=9222 --user-data-dir="C:\\selenium\\ChromeProfile"')
 print("\n4. In the Chrome window that opens:")
 print("   - Make sure you're logged into LinkedIn")
-print("   - Navigate to: https://www.linkedin.com/search/results/people/?geoUrn=%5B%22102134353%22%5D&keywords=finance&origin=FACETED_SEARCH")
+print("   - Navigate to: https://www.linkedin.com/search/results/people/?geoUrn=%5B%22102134353%22%5D&keywords=finance&origin=FACETED_SEARCH") #linkedin search results example
 print("   - Make sure you can see the search results")
 input("\nAfter completing these steps, press Enter to continue...")
 
 print("Setting up Chrome options...")
 chrome_options = Options()
 chrome_options.add_argument("--start-maximized")
-chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+chrome_options.add_experimental_option("debuggerAddress", "IP:PORT") #Change IP:PORT with yours
 
 print("Initializing Chrome driver...")
 try:
@@ -53,7 +53,7 @@ except Exception as e:
     print(f"Error initializing Chrome driver: {e}")
     raise
 
-def random_sleep(min_seconds=3, max_seconds=7):
+def random_sleep(min_seconds=3, max_seconds=7): #this is a mechanism to bypass linkedin's anti-scraping defense
     time.sleep(random.uniform(min_seconds, max_seconds))
 
 def clean_text(text):
@@ -62,7 +62,7 @@ def clean_text(text):
     return re.sub(r'\s+', ' ', text).strip()
 
 def scroll_to_bottom(driver):
-    print("Scrolling through page to load all content...")
+    print("Scrolling through page to load all content...") #to simulate a human behavior
     
     try:
         # Initial wait for page load
@@ -176,7 +176,7 @@ def extract_profile_data(result):
                 continue
             
             # Look for location
-            if any(loc in line.lower() for loc in ['tunisia', 'tunis', 'sfax', 'sousse']):
+            if any(loc in line.lower() for loc in ['tunisia', 'tunis', 'sfax', 'sousse']): #i wanted more specific results
                 profile_data["location"] = line
                 continue
             
@@ -372,7 +372,7 @@ def scrape_search_results(start_page=1, max_pages=None):
                     response = input("Would you like to retry this page? (y/n): ")
                     if response.lower() == 'y':
                         continue  # Retry the same page
-                    
+                    #in case linkedin detects robot behavior
                     response = input("Would you like to move to the next page? (y/n): ")
                     if response.lower() != 'y':
                         break
